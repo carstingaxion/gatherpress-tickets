@@ -1,0 +1,135 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "telex/block-telex-gatherpress-tickets",
+  "version": "0.1.0",
+  "title": "GatherPress Tickets Block",
+  "category": "widgets",
+  "icon": "tickets-alt",
+  "description": "A dynamic ticket button block for GatherPress events with post meta integration and intelligent URL fallback.",
+  "example": {
+    "attributes": {
+      "label": "Get Tickets",
+      "backgroundColor": "#3858e9",
+      "textColor": "#ffffff"
+    }
+  },
+  "attributes": {
+    "label": {
+      "type": "string",
+      "default": "Get Tickets",
+      "source": "html",
+      "selector": ".gatherpress-tickets__button-label"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#3858e9"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "borderRadius": {
+      "type": "object",
+      "default": {
+        "topLeft": "6px",
+        "topRight": "6px",
+        "bottomLeft": "6px",
+        "bottomRight": "6px"
+      }
+    },
+    "borderColor": {
+      "type": "string",
+      "default": ""
+    },
+    "borderWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "borderStyle": {
+      "type": "string",
+      "default": ""
+    },
+    "fontSize": {
+      "type": "string",
+      "default": ""
+    },
+    "fontFamily": {
+      "type": "string",
+      "default": ""
+    },
+    "fontWeight": {
+      "type": "string",
+      "default": ""
+    },
+    "textTransform": {
+      "type": "string",
+      "default": ""
+    },
+    "letterSpacing": {
+      "type": "string",
+      "default": ""
+    },
+    "lineHeight": {
+      "type": "string",
+      "default": ""
+    },
+    "paddingTop": {
+      "type": "string",
+      "default": "12px"
+    },
+    "paddingRight": {
+      "type": "string",
+      "default": "24px"
+    },
+    "paddingBottom": {
+      "type": "string",
+      "default": "12px"
+    },
+    "paddingLeft": {
+      "type": "string",
+      "default": "24px"
+    },
+    "width": {
+      "type": "string",
+      "default": ""
+    },
+    "textAlign": {
+      "type": "string",
+      "default": "center"
+    }
+  },
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
+  "supports": {
+    "html": false,
+    "anchor": true,
+    "align": [
+      "left",
+      "center",
+      "right",
+      "wide",
+      "full"
+    ],
+    "__experimentalBorder": {
+      "radius": true,
+      "width": true,
+      "color": true,
+      "style": true,
+      "__experimentalDefaultControls": {
+        "radius": true,
+        "width": true,
+        "color": true,
+        "style": true
+      }
+    }
+  },
+  "textdomain": "telex-gatherpress-tickets",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php"
+}

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/wp-admin/post.php?post=4&action=edit",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "steps": [
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "GatherPress Tickets",
+        "blogdescription": "Enhancing GatherPress Events with Tickets.",
+        "users_can_register": 1,
+        "permalink_structure": "/%year%/%monthnum%/%postname%/"
+      }
+    },
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+          "GATHERPRESS_ALPHA_VERSION": 1
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php';\n$page_args = array(\n'post_type'    => 'page',\n'post_status'  => 'publish',\n'post_title'   => 'GatherPress Tickets',\n'post_content' => '',\n);\n$page_id = wp_insert_post( $page_args, true );\nif ( is_wp_error( $page_id ) ) {\nerror_log( 'addPage error: ' . $page_id->get_error_message() );\n}",
+      "progress": {
+        "caption": "Crafting a GatherPress Tickets Demo Page"
+      }
+    },
+    {
+      "step": "login",
+      "username": "admin"
+    },
+    {
+      "step": "updateUserMeta",
+      "meta": {
+          "admin_color": "modern"
+      },
+      "userId": 1
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+          "resource": "wordpress.org\/plugins",
+          "slug": "gatherpress"
+      },
+      "options": {
+          "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/carstingaxion/gatherpress-tickets",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing plugin from GitHub: carstingaxion/gatherpress-tickets"
+      }
+    }
+  ]
+}
