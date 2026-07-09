@@ -2,7 +2,7 @@
 	"name": "gatherpress-tickets",
 	"version": "0.1.0",
 	"description": "A block variation of core/button for GatherPress event tickets, with post meta integration and intelligent URL fallback.",
-	"author": "Carsten Bach & WordPress Telex",
+	"author": "Carsten Bach",
 	"license": "GPL-2.0-or-later",
 	"keywords": [
 		"tickets",

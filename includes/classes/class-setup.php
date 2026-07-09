@@ -138,9 +138,9 @@ class Setup {
 
 			if ( 'title' === $key ) {
 				$new_columns['gatherpress_tickets'] = '<span class="dashicons dashicons-tickets-alt" style="font-size:16px;" title="'
-					. esc_attr__( 'Ticket URL', 'telex-gatherpress-tickets' )
+					. esc_attr__( 'Ticket URL', 'gatherpress-tickets' )
 					. '"></span><span class="screen-reader-text">'
-					. esc_html__( 'Ticket URL', 'telex-gatherpress-tickets' )
+					. esc_html__( 'Ticket URL', 'gatherpress-tickets' )
 					. '</span>';
 			}
 		}
@@ -170,11 +170,11 @@ class Setup {
 		if ( '' !== $ticket_url && false !== filter_var( $ticket_url, FILTER_VALIDATE_URL ) ) {
 			echo '<a href="' . esc_url( $ticket_url ) . '" target="_blank" rel="noopener noreferrer" title="' . esc_attr( $ticket_url ) . '">';
 			echo '<span style="font-size:18px;" aria-hidden="true">&#10003;</span>';
-			echo '<span class="screen-reader-text">' . esc_html__( 'Has ticket URL', 'telex-gatherpress-tickets' ) . '</span>';
+			echo '<span class="screen-reader-text">' . esc_html__( 'Has ticket URL', 'gatherpress-tickets' ) . '</span>';
 			echo '</a>';
 		} else {
 			echo '<span aria-hidden="true" style="color:#999;">&mdash;</span>';
-			echo '<span class="screen-reader-text">' . esc_html__( 'No ticket URL', 'telex-gatherpress-tickets' ) . '</span>';
+			echo '<span class="screen-reader-text">' . esc_html__( 'No ticket URL', 'gatherpress-tickets' ) . '</span>';
 		}
 	}
 }
