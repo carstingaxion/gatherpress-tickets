@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased](https://github.com/carstingaxion/gatherpress-tickets/compare/0.1.0...HEAD)
+## [Unreleased](https://github.com/carstingaxion/gatherpress-tickets/compare/0.1.1...HEAD)
+
+## [0.1.1](https://github.com/carstingaxion/gatherpress-tickets/compare/0.1.0...0.1.1) - 2026-07-09
+
+- Align admin column content centered https://github.com/carstingaxion/gatherpress-tickets/commit/9ee214f94c06adbf9c6d3a473053219c5c624db7
 
 ## [0.1.0](https://github.com/carstingaxion/gatherpress-tickets/compare/0.1.0...0.1.0) - 2026-07-09
 
