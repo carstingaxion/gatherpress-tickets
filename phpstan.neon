@@ -4,7 +4,7 @@ parameters:
     level: max
     inferPrivatePropertyTypeFromConstructor: true
     paths:
-        - src/
+        - includes/classes
         - plugin.php
     scanDirectories:
         - wp-content/plugins/gatherpress
