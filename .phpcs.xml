@@ -19,6 +19,7 @@
 		<properties>
 			<property name="text_domain" type="array">
 				<element value="gatherpress-tickets"/>
+				<element value="default"/>
 			</property>
 		</properties>
 	</rule>

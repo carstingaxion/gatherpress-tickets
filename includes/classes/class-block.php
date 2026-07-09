@@ -68,8 +68,12 @@ class Block {
 			return;
 		}
 
-		/** @var array{dependencies: string[], version: string} $asset */
-		$asset = require $asset_file;
+		/**
+		 * The asset file is expected to return an array with 'dependencies' and 'version' keys.
+		 *
+		 * @var array{dependencies: string[], version: string} $asset
+		 */
+		$asset = require $asset_file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 
 		wp_enqueue_script(
 			'gatherpress-tickets-editor',
@@ -193,8 +197,6 @@ class Block {
 
 		$skip_attrs = array( 'href', 'target', 'rel' );
 		$names      = $processor->get_attribute_names_with_prefix( '' );
-
-		/** @var array<string, string|true> $attributes */
 		$attributes = array();
 
 		if ( is_array( $names ) ) {
@@ -275,7 +277,6 @@ class Block {
 		$raw_venue_meta = get_post_meta( $post_id, '_gatherpress_venue', true );
 
 		if ( is_string( $raw_venue_meta ) && '' !== $raw_venue_meta ) {
-			/** @var mixed $venue_data */
 			$venue_data = json_decode( $raw_venue_meta, true );
 
 			if ( is_array( $venue_data ) && is_string( $venue_data['website'] ?? null ) ) {

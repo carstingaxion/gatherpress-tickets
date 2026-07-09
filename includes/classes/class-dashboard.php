@@ -115,7 +115,7 @@ class Dashboard {
 
 		// Inline script — no separate asset file needed for this lightweight widget.
 		wp_add_inline_script(
-			'dashboard', // already enqueued on index.php
+			'dashboard', // already enqueued on index.php .
 			$this->get_inline_script()
 		);
 
@@ -252,15 +252,15 @@ class Dashboard {
 			wp_send_json_error( array( 'message' => __( 'Insufficient permissions.', 'gatherpress-tickets' ) ) );
 		}
 
-		$raw_id   = is_string( $_POST['event_id'] ?? null ) ? $_POST['event_id'] : '';
+		$raw_id   = is_string( $_POST['event_id'] ?? null ) ? sanitize_text_field( $_POST['event_id'] ) : '';
 		$event_id = absint( $raw_id );
 
 		if ( ! $event_id || get_post_type( $event_id ) !== Setup::POST_TYPE ) {
 			wp_send_json_error( array( 'message' => __( 'Invalid event ID.', 'gatherpress-tickets' ) ) );
 		}
 
-		$raw_url = is_string( $_POST['ticket_url'] ?? null ) ? $_POST['ticket_url'] : '';
-		$trimmed = trim( sanitize_text_field( wp_unslash( $raw_url ) ) );
+		$raw_url = is_string( $_POST['ticket_url'] ?? null ) ? sanitize_text_field( $_POST['ticket_url'] ) : '';
+		$trimmed = trim( wp_unslash( $raw_url ) );
 
 		// Validate against the raw value BEFORE esc_url_raw, which prepends
 		// 'http://' to scheme-less strings like '123', causing FILTER_VALIDATE_URL
@@ -329,18 +329,17 @@ class Dashboard {
 				'gatherpress_event_query' => 'upcoming',
 				'posts_per_page'          => 20,
 				'post_status'             => 'publish',
-				// 'orderby'                 => 'event_date',
 				'orderby'                 => 'datetime',
 				'order'                   => 'ASC',
 				'no_found_rows'           => true,
 				'meta_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-					array( // phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+					array(
 						'relation' => 'OR',
-						array( // phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+						array( // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found, Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
 							'key'     => Setup::META_KEY,
 							'compare' => 'NOT EXISTS',
 						),
-						array( // phpcs:ignore Universal.Arrays.MixedArrayKeyTypes.ImplicitNumericKey
+						array( // phpcs:ignore Universal.Arrays.MixedKeyedUnkeyedArray.Found
 							'key'     => Setup::META_KEY,
 							'compare' => '=',
 							'value'   => '',
