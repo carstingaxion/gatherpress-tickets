@@ -3,7 +3,7 @@
  * Plugin Name:       GatherPress Tickets Block
  * Plugin URI:        https://github.com/carstingaxion/gatherpress-tickets
  * Description:       A block variation of core/button for GatherPress event tickets, with post meta integration and intelligent URL fallback.
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Requires plugins:  gatherpress
