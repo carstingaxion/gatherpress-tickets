@@ -83,8 +83,8 @@ class Dashboard {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'wp_ajax_' . self::AJAX_SAVE, array( $this, 'ajax_save_url' ) );
 		// Bust cache when the meta is updated outside the widget (e.g. post editor).
-		add_action( 'updated_post_meta', array( $this, 'maybe_bust_cache' ), 10, 3 );
-		add_action( 'deleted_post_meta', array( $this, 'maybe_bust_cache' ), 10, 3 );
+		add_action( 'updated_post_meta', array( $this, 'bust_cache_on_update' ), 10, 3 );
+		add_action( 'deleted_post_meta', array( $this, 'bust_cache_on_delete' ), 10, 3 );
 	}
 
 	/**
@@ -284,15 +284,35 @@ class Dashboard {
 	}
 
 	/**
-	 * Busts the transient cache when the ticket URL meta changes.
+	 * Busts the cache when the ticket URL meta is updated.
+	 *
+	 * Hooked to `updated_post_meta`, which passes a single int meta ID.
 	 *
 	 * @since 0.1.0
-	 * @param int    $meta_id    Meta ID (unused).
-	 * @param int    $object_id  Post ID (unused).
-	 * @param string $meta_key   Meta key that changed.
+	 * @param int    $meta_id   ID of the updated meta row (unused).
+	 * @param int    $object_id Post ID (unused).
+	 * @param string $meta_key  Meta key that was updated.
 	 * @return void
 	 */
-	public function maybe_bust_cache( int $meta_id, int $object_id, string $meta_key ): void {
+	public function bust_cache_on_update( int $meta_id, int $object_id, string $meta_key ): void {
+		if ( Setup::META_KEY === $meta_key ) {
+			$this->bust_cache();
+		}
+	}
+
+	/**
+	 * Busts the cache when the ticket URL meta is deleted.
+	 *
+	 * Hooked to `deleted_post_meta`, which passes an array of meta IDs
+	 * (not a single int like `updated_post_meta`).
+	 *
+	 * @since 0.1.0
+	 * @param string[] $meta_ids  IDs of the deleted meta rows (unused).
+	 * @param int      $object_id Post ID (unused).
+	 * @param string   $meta_key  Meta key that was deleted.
+	 * @return void
+	 */
+	public function bust_cache_on_delete( array $meta_ids, int $object_id, string $meta_key ): void {
 		if ( Setup::META_KEY === $meta_key ) {
 			$this->bust_cache();
 		}
