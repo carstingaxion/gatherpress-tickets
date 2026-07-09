@@ -8,7 +8,10 @@ import { createHigherOrderComponent } from '@wordpress/compose';
 import { InspectorControls } from '@wordpress/block-editor';
 import { useState } from '@wordpress/element';
 import { Notice, PanelBody, TextControl } from '@wordpress/components';
-import { PluginDocumentSettingPanel, PluginPrePublishPanel } from '@wordpress/editor';
+import {
+	PluginDocumentSettingPanel,
+	PluginPrePublishPanel,
+} from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { useEntityProp } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
@@ -115,7 +118,10 @@ function TicketUrlField( { postType, postId } ) {
 		const trimmed = draft.trim();
 		if ( ! isValidTicketUrl( trimmed ) ) {
 			setError(
-				__( 'Please enter a valid URL (e.g. https://example.com).', 'gatherpress-tickets' )
+				__(
+					'Please enter a valid URL (e.g. https://example.com).',
+					'gatherpress-tickets'
+				)
 			);
 			setDraft( savedUrl );
 			return;
@@ -159,43 +165,47 @@ function TicketUrlField( { postType, postId } ) {
  * surfaces share identical UX and validation behaviour.
  */
 const withTicketInspectorControls = createHigherOrderComponent(
-	( BlockEdit ) =>
-		( props ) => {
-			const postType = useSelect(
-				( select ) =>
-					props.context?.postType ||
-					select( 'core/editor' )?.getCurrentPostType(),
-				[ props.context?.postType ]
-			);
+	( BlockEdit ) => ( props ) => {
+		const postType = useSelect(
+			( select ) =>
+				props.context?.postType ||
+				select( 'core/editor' )?.getCurrentPostType(),
+			[ props.context?.postType ]
+		);
 
-			const postId = useSelect(
-				( select ) =>
-					props.context?.postId ||
-					select( 'core/editor' )?.getCurrentPostId(),
-				[ props.context?.postId ]
-			);
+		const postId = useSelect(
+			( select ) =>
+				props.context?.postId ||
+				select( 'core/editor' )?.getCurrentPostId(),
+			[ props.context?.postId ]
+		);
 
-			if (
-				props.name !== 'core/button' ||
-				! props.attributes.className?.includes( 'is-style-gatherpress-tickets' )
-			) {
-				return <BlockEdit { ...props } />;
-			}
+		if (
+			props.name !== 'core/button' ||
+			! props.attributes.className?.includes(
+				'is-style-gatherpress-tickets'
+			)
+		) {
+			return <BlockEdit { ...props } />;
+		}
 
-			return (
-				<>
-					<BlockEdit { ...props } />
-					<InspectorControls>
-						<PanelBody
-							title={ __( 'Ticket Settings', 'gatherpress-tickets' ) }
-							initialOpen={ true }
-						>
-							<TicketUrlField postType={ postType } postId={ postId } />
-						</PanelBody>
-					</InspectorControls>
-				</>
-			);
-		},
+		return (
+			<>
+				<BlockEdit { ...props } />
+				<InspectorControls>
+					<PanelBody
+						title={ __( 'Ticket Settings', 'gatherpress-tickets' ) }
+						initialOpen={ true }
+					>
+						<TicketUrlField
+							postType={ postType }
+							postId={ postId }
+						/>
+					</PanelBody>
+				</InspectorControls>
+			</>
+		);
+	},
 	'withTicketInspectorControls'
 );
 
@@ -222,13 +232,6 @@ function GatherPressTicketsDocumentPanel() {
 	const postId = useSelect(
 		( select ) => select( 'core/editor' )?.getCurrentPostId(),
 		[]
-	);
-
-	const [ meta, setMeta ] = useEntityProp(
-		'postType',
-		postType,
-		'meta',
-		postId
 	);
 
 	if ( 'gatherpress_event' !== postType ) {
