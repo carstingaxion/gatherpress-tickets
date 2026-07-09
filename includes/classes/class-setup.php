@@ -117,7 +117,7 @@ class Setup {
 		}
 
 		echo '<style>'
-			. '.column-gatherpress_tickets{width:3em;text-align:center;}'
+			. 'td.column-gatherpress_tickets, th.column-gatherpress_tickets{width:3em;text-align:center;}'
 			. '.column-gatherpress_tickets a{color:#00a32a;text-decoration:none;}'
 			. '.column-gatherpress_tickets a:hover{color:#007017;}'
 			. '</style>';
