@@ -181,8 +181,9 @@ class Block {
 	/**
 	 * Converts the anchor element to a non-interactive span element.
 	 *
-	 * Transfers all attributes except href, target and rel, and adds
-	 * role="button" tabindex="0" for accessibility.
+	 * Reads transferable attributes from the <a> tag via WP_HTML_Tag_Processor,
+	 * serialises them, then does a targeted string splice to swap the tags.
+	 * Adds role="button" tabindex="0" for accessibility.
 	 *
 	 * @since 0.1.0
 	 * @param string $block_content The block HTML containing an <a> element.
@@ -195,52 +196,81 @@ class Block {
 			return $block_content;
 		}
 
-		$skip_attrs = array( 'href', 'target', 'rel' );
-		$names      = $processor->get_attribute_names_with_prefix( '' );
-		$attributes = array();
+		$span_attrs = $this->collect_transferable_attrs( $processor )
+			. ' role="button" tabindex="0"';
 
-		if ( is_array( $names ) ) {
-			foreach ( $names as $name ) {
-				if ( ! is_string( $name ) || in_array( $name, $skip_attrs, true ) ) {
-					continue;
-				}
+		return $this->splice_tag( $block_content, 'a', 'span', $span_attrs );
+	}
 
-				$value = $processor->get_attribute( $name );
+	/**
+	 * Collects attributes from the current tag that are safe to transfer to a
+	 * replacement element, skipping link-specific attributes (href, target, rel).
+	 *
+	 * @since 0.1.0
+	 * @param WP_HTML_Tag_Processor $processor A processor already positioned on the source tag.
+	 * @return string Serialised attribute string, e.g. ' class="foo" data-id="1"'.
+	 */
+	private function collect_transferable_attrs( WP_HTML_Tag_Processor $processor ): string {
+		$skip  = array( 'href', 'target', 'rel' );
+		$names = $processor->get_attribute_names_with_prefix( '' );
+		$out   = '';
 
-				if ( null !== $value ) {
-					$attributes[ $name ] = $value;
-				}
-			}
+		if ( ! is_array( $names ) ) {
+			return $out;
 		}
 
-		$span_attrs = '';
+		foreach ( $names as $name ) {
+			if ( ! is_string( $name ) || in_array( $name, $skip, true ) ) {
+				continue;
+			}
 
-		foreach ( $attributes as $name => $value ) {
-			$span_attrs .= true === $value
+			$value = $processor->get_attribute( $name );
+
+			if ( null === $value ) {
+				continue;
+			}
+
+			$out .= true === $value
 				? ' ' . $name
 				: ' ' . $name . '="' . esc_attr( (string) $value ) . '"';
 		}
 
-		$span_attrs .= ' role="button" tabindex="0"';
+		return $out;
+	}
 
-		$a_pos = strpos( $block_content, '<a' );
+	/**
+	 * Replaces the opening and closing tags of one HTML element with another,
+	 * preserving the inner content between them.
+	 *
+	 * Only splices the first occurrence of $old_tag. Returns the original string
+	 * unchanged if the tag boundaries cannot be located.
+	 *
+	 * @since 0.1.0
+	 * @param string $html       The HTML string to modify.
+	 * @param string $old_tag    Tag name to replace, e.g. 'a'.
+	 * @param string $new_tag    Replacement tag name, e.g. 'span'.
+	 * @param string $new_attrs  Serialised attribute string for the new opening tag.
+	 * @return string The modified HTML.
+	 */
+	private function splice_tag( string $html, string $old_tag, string $new_tag, string $new_attrs ): string {
+		$open_start = strpos( $html, '<' . $old_tag );
 
-		if ( false === $a_pos ) {
-			return $block_content;
+		if ( false === $open_start ) {
+			return $html;
 		}
 
-		$open_pos  = strpos( $block_content, '>', $a_pos );
-		$close_pos = strpos( $block_content, '</a>' );
+		$open_end  = strpos( $html, '>', $open_start );
+		$close_pos = strpos( $html, '</' . $old_tag . '>' );
 
-		if ( false === $open_pos || false === $close_pos || $close_pos <= $open_pos ) {
-			return $block_content;
+		if ( false === $open_end || false === $close_pos || $close_pos <= $open_end ) {
+			return $html;
 		}
 
-		$inner  = substr( $block_content, $open_pos + 1, $close_pos - $open_pos - 1 );
-		$before = substr( $block_content, 0, $a_pos );
-		$after  = substr( $block_content, $close_pos + 4 );
+		$inner  = substr( $html, $open_end + 1, $close_pos - $open_end - 1 );
+		$before = substr( $html, 0, $open_start );
+		$after  = substr( $html, $close_pos + strlen( '</' . $old_tag . '>' ) );
 
-		return $before . '<span' . $span_attrs . '>' . $inner . '</span>' . $after;
+		return $before . '<' . $new_tag . $new_attrs . '>' . $inner . '</' . $new_tag . '>' . $after;
 	}
 
 	/**
