@@ -72,7 +72,7 @@ class Block {
 		$asset = require $asset_file;
 
 		wp_enqueue_script(
-			'telex-gatherpress-tickets-editor',
+			'gatherpress-tickets-editor',
 			plugins_url( 'build/index.js', __DIR__ . '/../../plugin.php' ),
 			$asset['dependencies'],
 			$asset['version'],
@@ -80,8 +80,8 @@ class Block {
 		);
 
 		wp_set_script_translations(
-			'telex-gatherpress-tickets-editor',
-			'telex-gatherpress-tickets'
+			'gatherpress-tickets-editor',
+			'gatherpress-tickets'
 		);
 	}
 
@@ -234,9 +234,9 @@ class Block {
 			return $block_content;
 		}
 
-		$inner   = substr( $block_content, $open_pos + 1, $close_pos - $open_pos - 1 );
-		$before  = substr( $block_content, 0, $a_pos );
-		$after   = substr( $block_content, $close_pos + 4 );
+		$inner  = substr( $block_content, $open_pos + 1, $close_pos - $open_pos - 1 );
+		$before = substr( $block_content, 0, $a_pos );
+		$after  = substr( $block_content, $close_pos + 4 );
 
 		return $before . '<span' . $span_attrs . '>' . $inner . '</span>' . $after;
 	}
@@ -248,7 +248,7 @@ class Block {
 	 * @return string The fallback label.
 	 */
 	private function get_fallback_label(): string {
-		return __( 'Get tickets at the venue', 'telex-gatherpress-tickets' );
+		return __( 'Get tickets at the venue', 'gatherpress-tickets' );
 	}
 
 	/**

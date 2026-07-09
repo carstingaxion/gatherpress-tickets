@@ -7,10 +7,10 @@
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Requires plugins:  gatherpress
- * Author:            Carsten Bach & WordPress Telex
+ * Author:            carstenbach
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       telex-gatherpress-tickets
+ * Text Domain:       gatherpress-tickets
  * Domain Path:       /languages
  *
  * @package GatherPress_Tickets

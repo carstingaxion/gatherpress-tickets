@@ -96,7 +96,7 @@ class Dashboard {
 	public function register_widget(): void {
 		wp_add_dashboard_widget(
 			'gatherpress_tickets_widget',
-			__( 'Upcoming Events Without Ticket URL', 'telex-gatherpress-tickets' ),
+			__( 'Upcoming Events Without Ticket URL', 'gatherpress-tickets' ),
 			array( $this, 'render_widget' )
 		);
 	}
@@ -128,15 +128,15 @@ class Dashboard {
 			'dashboard',
 			'gpTicketsDashboard',
 			array(
-				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-				'nonce'      => wp_create_nonce( self::NONCE_ACTION ),
-				'action'     => self::AJAX_SAVE,
-				'i18n'       => array(
-					'save'    => __( 'Save', 'telex-gatherpress-tickets' ),
-					'saving'  => __( 'Saving…', 'telex-gatherpress-tickets' ),
-					'saved'   => __( 'Saved', 'telex-gatherpress-tickets' ),
-					'error'   => __( 'Error — try again', 'telex-gatherpress-tickets' ),
-					'edit'    => __( 'Edit URL', 'telex-gatherpress-tickets' ),
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( self::NONCE_ACTION ),
+				'action'  => self::AJAX_SAVE,
+				'i18n'    => array(
+					'save'   => __( 'Save', 'gatherpress-tickets' ),
+					'saving' => __( 'Saving…', 'gatherpress-tickets' ),
+					'saved'  => __( 'Saved', 'gatherpress-tickets' ),
+					'error'  => __( 'Error — try again', 'gatherpress-tickets' ),
+					'edit'   => __( 'Edit URL', 'gatherpress-tickets' ),
 				),
 			)
 		);
@@ -158,7 +158,7 @@ class Dashboard {
 		if ( ! $query->have_posts() ) {
 			echo '<div class="no-activity">'
 				. '<p class="smiley" aria-hidden="true"></p>'
-				. '<p>' . esc_html__( 'All upcoming events have a ticket URL!', 'telex-gatherpress-tickets' ) . '</p>'
+				. '<p>' . esc_html__( 'All upcoming events have a ticket URL!', 'gatherpress-tickets' ) . '</p>'
 				. '</div>';
 			wp_reset_postdata();
 			return;
@@ -193,16 +193,18 @@ class Dashboard {
 			printf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( $edit_link ),
-				esc_attr( sprintf(
+				esc_attr(
+					sprintf(
 					/* translators: %s: event title */
-					__( 'Edit &#8220;%s&#8221;', 'telex-gatherpress-tickets' ),
-					$title
-				) ),
+						__( 'Edit &#8220;%s&#8221;', 'gatherpress-tickets' ),
+						$title
+					) 
+				),
 				esc_html( $title )
 			);
 			if ( $can_edit ) {
 				echo '<button type="button" class="button button-secondary button-small gp-tickets-edit-trigger">'
-					. esc_html__( 'Add URL', 'telex-gatherpress-tickets' )
+					. esc_html__( 'Add URL', 'gatherpress-tickets' )
 					. '</button>';
 			}
 			echo '</span>'; // .gp-tickets-title-row
@@ -212,14 +214,16 @@ class Dashboard {
 				echo '<span class="gp-tickets-url-row" aria-hidden="true">';
 				echo '<input type="url" class="gp-tickets-url-input" '
 					. 'tabindex="-1" '
-					. 'placeholder="' . esc_attr__( 'https://…', 'telex-gatherpress-tickets' ) . '" '
-					. 'aria-label="' . esc_attr( sprintf(
+					. 'placeholder="' . esc_attr__( 'https://…', 'gatherpress-tickets' ) . '" '
+					. 'aria-label="' . esc_attr(
+						sprintf(
 						/* translators: %s: event title */
-						__( 'Ticket URL for %s', 'telex-gatherpress-tickets' ),
-						$title
-					) ) . '" />';
+							__( 'Ticket URL for %s', 'gatherpress-tickets' ),
+							$title
+						) 
+					) . '" />';
 				echo '<button type="button" class="button button-primary button-small gp-tickets-save-btn" tabindex="-1">'
-					. esc_html__( 'Save', 'telex-gatherpress-tickets' )
+					. esc_html__( 'Save', 'gatherpress-tickets' )
 					. '</button>';
 				echo '</span>'; // .gp-tickets-url-row
 			}
@@ -245,24 +249,24 @@ class Dashboard {
 		check_ajax_referer( self::NONCE_ACTION, 'nonce' );
 
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Insufficient permissions.', 'telex-gatherpress-tickets' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Insufficient permissions.', 'gatherpress-tickets' ) ) );
 		}
 
-		$raw_id  = is_string( $_POST['event_id'] ?? null ) ? $_POST['event_id'] : '';
+		$raw_id   = is_string( $_POST['event_id'] ?? null ) ? $_POST['event_id'] : '';
 		$event_id = absint( $raw_id );
 
 		if ( ! $event_id || get_post_type( $event_id ) !== Setup::POST_TYPE ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid event ID.', 'telex-gatherpress-tickets' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid event ID.', 'gatherpress-tickets' ) ) );
 		}
 
-		$raw_url  = is_string( $_POST['ticket_url'] ?? null ) ? $_POST['ticket_url'] : '';
-		$trimmed  = trim( sanitize_text_field( wp_unslash( $raw_url ) ) );
+		$raw_url = is_string( $_POST['ticket_url'] ?? null ) ? $_POST['ticket_url'] : '';
+		$trimmed = trim( sanitize_text_field( wp_unslash( $raw_url ) ) );
 
 		// Validate against the raw value BEFORE esc_url_raw, which prepends
 		// 'http://' to scheme-less strings like '123', causing FILTER_VALIDATE_URL
 		// to accept them. Require a scheme + a dot-containing host at minimum.
 		if ( '' === $trimmed || false === filter_var( $trimmed, FILTER_VALIDATE_URL ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please enter a valid URL.', 'telex-gatherpress-tickets' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Please enter a valid URL.', 'gatherpress-tickets' ) ) );
 		}
 
 		$url = esc_url_raw( $trimmed );
@@ -272,7 +276,7 @@ class Dashboard {
 
 		wp_send_json_success(
 			array(
-				'message'  => __( 'Ticket URL saved.', 'telex-gatherpress-tickets' ),
+				'message'  => __( 'Ticket URL saved.', 'gatherpress-tickets' ),
 				'event_id' => $event_id,
 				'url'      => $url,
 			)
@@ -362,7 +366,7 @@ class Dashboard {
 	 * @return string Human-readable date string.
 	 */
 	private function format_event_date( int $event_id ): string {
-		$raw = get_post_meta( $event_id, 'gatherpress_datetime_start', true );
+		$raw  = get_post_meta( $event_id, 'gatherpress_datetime_start', true );
 		$time = is_string( $raw ) && '' !== $raw
 			? (int) strtotime( $raw )
 			: (int) get_the_date( 'U', $event_id );
