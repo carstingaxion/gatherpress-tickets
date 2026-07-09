@@ -11,7 +11,7 @@ import { PluginPrePublishPanel } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { useEntityProp } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
-import { ticket as ticketIcon } from '@wordpress/icons';
+const ticketIcon = 'dashicons-tickets-alt';
 
 /**
  * The variation name used to identify GatherPress Tickets buttons.
@@ -39,16 +39,16 @@ const META_KEY = 'gatherpress_tickets_url';
  */
 registerBlockVariation( 'core/button', {
 	name: VARIATION_NAME,
-	title: __( 'GatherPress Tickets', 'telex-gatherpress-tickets' ),
+	title: __( 'GatherPress Tickets', 'gatherpress-tickets' ),
 	description: __(
 		'A ticket button for GatherPress events. The URL is stored in post meta with intelligent fallback to venue website.',
-		'telex-gatherpress-tickets'
+		'gatherpress-tickets'
 	),
 	category: 'widgets',
 	icon: ticketIcon,
 	attributes: {
 		className: 'is-style-gatherpress-tickets',
-		text: __( 'Get Tickets', 'telex-gatherpress-tickets' ),
+		text: __( 'Get Tickets', 'gatherpress-tickets' ),
 		url: '#gatherpress-tickets',
 	},
 	isActive: ( blockAttributes ) =>
@@ -124,18 +124,18 @@ function GatherPressTicketsEdit( { BlockEdit, ...props } ) {
 				<PanelBody
 					title={ __(
 						'Ticket Settings',
-						'telex-gatherpress-tickets'
+						'gatherpress-tickets'
 					) }
 					initialOpen={ true }
 				>
 					<TextControl
 						label={ __(
 							'Ticket URL',
-							'telex-gatherpress-tickets'
+							'gatherpress-tickets'
 						) }
 						help={ __(
 							'Enter the URL where attendees can purchase tickets. Falls back to venue website if empty. The button link above is a placeholder and will be replaced on the frontend.',
-							'telex-gatherpress-tickets'
+							'gatherpress-tickets'
 						) }
 						value={ ticketUrl }
 						onChange={ setTicketUrl }
@@ -150,7 +150,7 @@ function GatherPressTicketsEdit( { BlockEdit, ...props } ) {
 
 addFilter(
 	'editor.BlockEdit',
-	'telex-gatherpress-tickets/inspector',
+	'gatherpress-tickets/inspector',
 	withTicketInspectorControls
 );
 
@@ -190,18 +190,18 @@ function GatherPressTicketsPrePublishCheck() {
 
 	return (
 		<PluginPrePublishPanel
-			title={ __( 'GatherPress Tickets', 'telex-gatherpress-tickets' ) }
+			title={ __( 'GatherPress Tickets', 'gatherpress-tickets' ) }
 			icon={ ticketIcon }
 			initialOpen={ true }
 		>
 			<p style={ { margin: '0 0 12px' } }>
 				{ __(
 					'Set the URL where attendees can purchase tickets. If left empty, the button will fall back to the venue link.',
-					'telex-gatherpress-tickets'
+					'gatherpress-tickets'
 				) }
 			</p>
 			<TextControl
-				label={ __( 'Ticket URL', 'telex-gatherpress-tickets' ) }
+				label={ __( 'Ticket URL', 'gatherpress-tickets' ) }
 				value={ ticketUrl }
 				onChange={ setTicketUrl }
 				type="url"
@@ -211,6 +211,6 @@ function GatherPressTicketsPrePublishCheck() {
 	);
 }
 
-registerPlugin( 'telex-gatherpress-tickets-prepublish', {
+registerPlugin( 'gatherpress-tickets-prepublish', {
 	render: GatherPressTicketsPrePublishCheck,
 } );
