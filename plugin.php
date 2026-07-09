@@ -55,6 +55,7 @@ function gatherpress_tickets_setup(): void {
 	if ( defined( 'GATHERPRESS_VERSION' ) ) {
 		\GatherPress_Tickets\Setup::get_instance();
 		\GatherPress_Tickets\Block::get_instance();
+		\GatherPress_Tickets\Dashboard::get_instance();
 	}
 }
 add_action( 'plugins_loaded', 'gatherpress_tickets_setup' );
